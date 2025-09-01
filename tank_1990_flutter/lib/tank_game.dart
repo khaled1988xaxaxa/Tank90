@@ -19,7 +19,7 @@ import 'package:flutter/services.dart';
 class TankGame extends FlameGame
     with HasCollisionDetection, HasKeyboardHandlerComponents {
   late GameMap gameMap;
-  late Player player;
+  Player? player;
   late Eagle eagle;
   late UIOverlay uiOverlay;
   final List<EnemyTank> enemies = [];
@@ -63,7 +63,7 @@ class TankGame extends FlameGame
     
     // Create the player tank
     player = Player(position: Vector2(330, 870));
-    await add(player);
+    add(player!);
     
     // Create UI overlay
     uiOverlay = UIOverlay();
@@ -202,15 +202,15 @@ class TankGame extends FlameGame
     
     // Recreate player and eagle if they exist
     try {
-      player.removeFromParent();
+      player?.removeFromParent();
       eagle.removeFromParent();
     } catch (e) {
       // Components might not exist yet
     }
     
     player = Player(position: Vector2(330, 870));
-    add(player);
-    
+    add(player!);
+
     eagle = Eagle(position: Vector2(420, 840));
     add(eagle);
     
@@ -267,30 +267,30 @@ class TankGame extends FlameGame
       
       if (keyboard.isLogicalKeyPressed(LogicalKeyboardKey.arrowUp) ||
           keyboard.isLogicalKeyPressed(LogicalKeyboardKey.keyW)) {
-        player.moveUp(dt);
+        player?.moveUp(dt);
         isMoving = true;
       }
       
       if (keyboard.isLogicalKeyPressed(LogicalKeyboardKey.arrowDown) ||
           keyboard.isLogicalKeyPressed(LogicalKeyboardKey.keyS)) {
-        player.moveDown(dt);
+        player?.moveDown(dt);
         isMoving = true;
       }
       
       if (keyboard.isLogicalKeyPressed(LogicalKeyboardKey.arrowLeft) ||
           keyboard.isLogicalKeyPressed(LogicalKeyboardKey.keyA)) {
-        player.moveLeft(dt);
+        player?.moveLeft(dt);
         isMoving = true;
       }
       
       if (keyboard.isLogicalKeyPressed(LogicalKeyboardKey.arrowRight) ||
           keyboard.isLogicalKeyPressed(LogicalKeyboardKey.keyD)) {
-        player.moveRight(dt);
+        player?.moveRight(dt);
         isMoving = true;
       }
       
       if (keyboard.isLogicalKeyPressed(LogicalKeyboardKey.space)) {
-        player.fire();
+        player?.fire();
       }
       
       // Handle return to menu key during gameplay
@@ -298,7 +298,7 @@ class TankGame extends FlameGame
         showMainMenu();
       }
       
-      player.isMoving = isMoving;
+      player?.isMoving = isMoving;
     }
     
     // Clean up bullets that are out of bounds

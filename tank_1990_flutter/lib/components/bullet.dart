@@ -4,6 +4,8 @@ import 'tank.dart';
 import 'eagle.dart';
 import 'explosion.dart';
 import 'game_map.dart';
+import 'enemy_tank.dart';
+import 'player.dart';
 
 class Bullet extends SpriteComponent with HasGameReference, CollisionCallbacks {
   final Vector2 velocity;
@@ -47,22 +49,35 @@ class Bullet extends SpriteComponent with HasGameReference, CollisionCallbacks {
   @override
   bool onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     if (other is Tank && other != owner) {
-      // Hit a tank
+      // Check for friendly fire - enemies should not damage other enemies
+      if (owner is EnemyTank && other is EnemyTank) {
+        print('LOG: Friendly fire prevented - Enemy bullet hit another enemy');
+        print('LOG: Bullet owner: ${owner.runtimeType}, Target: ${other.runtimeType}');
+        return true; // Don't explode, just pass through
+      }
+      
+      // Log all bullet hits
+      print('LOG: Bullet collision - Owner: ${owner.runtimeType}, Target: ${other.runtimeType}');
+      
+      // Hit a tank (valid target)
       other.explode();
       _explode();
       return false;
     } else if (other is Eagle) {
       // Hit the eagle
+      print('LOG: Bullet hit Eagle - Owner: ${owner.runtimeType}');
       other.destroy();
       _explode();
       return false;
     } else if (other is Bullet && other != this) {
       // Hit another bullet
+      print('LOG: Bullet collision - ${owner.runtimeType} bullet vs ${(other as Bullet).owner.runtimeType} bullet');
       other._explode();
       _explode();
       return false;
     } else if (other is Brick) {
       // Hit a brick wall - destroy it
+      print('LOG: Bullet hit Brick - Owner: ${owner.runtimeType}');
       _explode();
       return false;
     }

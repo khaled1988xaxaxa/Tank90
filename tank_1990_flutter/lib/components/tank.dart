@@ -160,8 +160,12 @@ abstract class Tank extends SpriteAnimationComponent
   }
   
   void fire() {
-    if (!canFire) return;
+    if (!canFire) {
+      print('LOG: ${runtimeType} attempted to fire but cooldown active');
+      return;
+    }
     
+    print('LOG: ${runtimeType} firing bullet in direction ${direction}');
     canFire = false;
     final timerComponent = TimerComponent(
       period: 0.5,
@@ -209,6 +213,8 @@ abstract class Tank extends SpriteAnimationComponent
   }
   
   void explode() {
+    print('LOG: ${runtimeType} exploding at position (${position.x.toStringAsFixed(1)}, ${position.y.toStringAsFixed(1)})');
+    
     // Create explosion effect
     final explosion = Explosion(position: position.clone());
     parent?.add(explosion);
@@ -239,11 +245,13 @@ abstract class Tank extends SpriteAnimationComponent
   bool onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     if (other is Tank && other != this) {
       // Tank collision - stop movement and change direction
+      print('LOG: Tank collision - ${runtimeType} collided with ${other.runtimeType}');
       _revertPosition();
       changeDirection();
       return false;
     } else if (other.runtimeType.toString().contains('Brick')) {
       // Brick collision - stop movement and change direction
+      print('LOG: Tank hit Brick - ${runtimeType} collided with brick');
       _revertPosition();
       changeDirection();
       return false;
