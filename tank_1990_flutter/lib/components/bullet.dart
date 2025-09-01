@@ -3,6 +3,7 @@ import 'package:flame/collisions.dart';
 import 'tank.dart';
 import 'eagle.dart';
 import 'explosion.dart';
+import 'game_map.dart';
 
 class Bullet extends SpriteComponent with HasGameReference, CollisionCallbacks {
   final Vector2 velocity;
@@ -58,6 +59,10 @@ class Bullet extends SpriteComponent with HasGameReference, CollisionCallbacks {
     } else if (other is Bullet && other != this) {
       // Hit another bullet
       other._explode();
+      _explode();
+      return false;
+    } else if (other is Brick) {
+      // Hit a brick wall - destroy it
       _explode();
       return false;
     }

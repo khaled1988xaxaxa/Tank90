@@ -6,9 +6,9 @@ class Player extends Tank {
   
   Player({required Vector2 position}) 
     : super(
-        position: position,
-        spritePath: 'sprites/player.png',
-        initialDirection: Direction.up,
+          position: position,
+          spritePath: 'sprites/player.png',
+          initialDirection: Direction.up,
       );
   
   @override

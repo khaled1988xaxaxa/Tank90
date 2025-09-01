@@ -32,6 +32,7 @@ class GameScreen extends StatefulWidget {
 
 class _GameScreenState extends State<GameScreen> {
   late TankGame game;
+  final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
@@ -40,17 +41,27 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          color: Colors.black,
-        ),
-        child: Center(
-          child: AspectRatio(
-            aspectRatio: 1.0, // Square aspect ratio for the game
-            child: GameWidget<TankGame>.controlled(
-              gameFactory: () => game,
+      body: Focus(
+        focusNode: _focusNode,
+        autofocus: true,
+        child: Container(
+          decoration: const BoxDecoration(
+            color: Colors.black,
+          ),
+          child: Center(
+            child: AspectRatio(
+              aspectRatio: 1.0, // Square aspect ratio for the game
+              child: GameWidget<TankGame>.controlled(
+                gameFactory: () => game,
+              ),
             ),
           ),
         ),
